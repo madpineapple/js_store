@@ -92,7 +92,14 @@ passport.authenticate('local', {
   successRedirect:"/dashboard",
   failureRedirect:'/users/login',
   failureFlash:true
-})(req,res,next);
-
+ })(req,res,next);
 });
+
+//Logout
+router.get('/logout', (req,res)=>{
+  req.logout();
+  req.flash('success_msg', 'logged out');
+  res.redirect('/users/login');
+});
+
 module.exports = router;

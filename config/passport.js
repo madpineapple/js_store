@@ -7,41 +7,48 @@ const User = require('../models/User');
 const db = require('../models/User');
 
 module.exports = function(passport){
+
+
   passport.use(
      new LocalStrategy({ usernameField: 'user'}, (user, password, done)=>{
-      console.log("hello");
 
       //Match users
       let sql ="SELECT * FROM users WHERE user = ? LIMIT 1";
-      let query = db.query(sql, user, (err, result)=>{
+      db.query(sql,user, function(err, result){
         console.log(result);
-          if(err) throw err;
+          if(err)
+            return done(err);
           if(!result.length){
-            console.log('user doesnt exist');
+            console.log('user  not found');
             return done(null,false, { message: 'user not registered'});
           }
-      });
-      //Match password
-      bcrypt.compare(password, user.password, (err, isMatch)=>{
-        if(err) throw err;
 
-        if(isMatch){
-          return done(null, user);
-        }else{
-          return done(null, false, {message:'password incorrect'});
-        }
+          //Match password
+          bcrypt.compare(password, result[0].password, function(err, isMatch){
+            if(err)
+            return done(err);
+
+            if(isMatch){
+              return done(null, result[0]);
+            }else{
+              return done(null, false, {message:'password incorrect'});
+            }
+          });
       });
+
+
     })
   );
-//passport session support
-passport.serializeUser((user, done)=> {
-  done(null, user.id);
-});
 
-passport.deserializeUser((id, done)=> {
-  db.findById(id, (err, user)=> {
-    done(err, user);
+  //passport session support
+  passport.serializeUser(function(user, done){
+    done(null, user.id);
   });
-});
+
+  passport.deserializeUser(function(id,done){
+    db.query('SELECT * FROM users WHERE id = ?', [id], function(err, result) {
+      done(err, result[0]);
+    });
+  });
 
 }
