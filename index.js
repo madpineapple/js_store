@@ -14,6 +14,10 @@ const app = express();
 require('./config/passport')(passport);
 //bodyParser
 app.use(express.urlencoded({ extended: false }));
+//ejs
+app.use(expressLayouts);
+app.set('view engine', 'ejs');
+
 
 //Express session
 app.use(session({
@@ -43,7 +47,3 @@ app.use ('/users', require('./routes/users.js'));
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
-
-//ejs
-app.use(expressLayouts);
-app.set('view engine', 'ejs');
