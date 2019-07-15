@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const flash = require('connect-flash');
 const passport = require('passport');
+const multer = require('multer');
+
 
 //set up app
 const app = express();
@@ -17,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 //ejs
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
 
 
 //Express session
