@@ -1,6 +1,34 @@
-.carousel{
-  display: block;
-    margin-left: auto;
-    margin-right: auto;
-    flex-flow: row wrap;
+
+body{
+  background-image: url('/images/background.png');
+  background-repeat: no-repeat;
+}
+#options{
+  border-top:solid;
+  border-left: solid;
+  border-right: solid;
+  border-width: 5px;
+  text-align: center;
+  padding:20px;
+  margin-top: 10px;
+  background-color: white;
+
+
+}
+
+#explore_btn{
+  border-left: solid;
+  border-right: solid;
+  border-bottom: solid;
+  border-width: 5px;
+  text-align: center;
+  padding:20px;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+footer{
+  height: 100px;
+  background-color: brown;
+  padding-top:50px;
 }
