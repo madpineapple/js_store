@@ -7,6 +7,7 @@ body{
   border-top:solid;
   border-left: solid;
   border-right: solid;
+  border-bottom: solid;
   border-width: 5px;
   text-align: center;
   padding:20px;
@@ -16,15 +17,10 @@ body{
 
 }
 
-#explore_btn{
-  border-left: solid;
-  border-right: solid;
-  border-bottom: solid;
-  border-width: 5px;
+
+#products{
   text-align: center;
-  padding:20px;
-  margin-bottom: 10px;
-  background-color: white;
+  background-color:#FFB6C1;
 }
 
 footer{

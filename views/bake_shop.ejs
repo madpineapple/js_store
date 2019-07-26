@@ -1,10 +1,20 @@
 <h1>Bake Shop</h1>
 <div class="container">
-  <div class="row">
-    <div class="col-md-6 m-auto">
-      <h2><%= name %> </h2>
-      <p><%= description %> </p>
-      <p> <%= price%> </p>
-    </div>
+  <%if(data.length){
+    for(var i = 0; i<data.length; i++){ %>
+      <div class="row">
+        <div class="col-md-6 m-auto" id = "products">
+
+          <h3><%=data[i].name%></h3>
+          <p><%=data[i].description%></p>
+          <p><%=data[i].price%></p>
+          <img src="/images/<%=data[i].image%>" alt="">
+          <p><a href="#" class="btn btn-primary" role="add">Add to cart</a></p>
+        </div>
+      </div>
+  <%  }
+ }%>
+
+
   </div>
 </div>
