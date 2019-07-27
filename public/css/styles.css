@@ -27,12 +27,14 @@ body{
 }
 
 #product_img{
-  width:500px;
-  height: 500px;
+  height: auto;
+  width: auto; 
+  max-width:500px;
+  max-height: 500px;
 }
 
 footer{
-  height: 100px;
   background-color: brown;
   padding-top:50px;
+  font-size: 20px;
 }
