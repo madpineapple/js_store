@@ -14,13 +14,21 @@ body{
   margin-top: 10px;
   background-color: white;
 
+}
 
+#profile{
+  font-size: 50px;
 }
 
 
 #products{
   text-align: center;
   background-color:#FFB6C1;
+}
+
+#product_img{
+  width:500px;
+  height: 500px;
 }
 
 footer{

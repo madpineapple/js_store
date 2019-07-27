@@ -4,11 +4,11 @@
     for(var i = 0; i<data.length; i++){ %>
       <div class="row">
         <div class="col-md-6 m-auto" id = "products">
-
+          <img id ="product_img" src="/images/<%=data[i].image%>" alt="">
           <h3><%=data[i].name%></h3>
           <p><%=data[i].description%></p>
           <p><%=data[i].price%></p>
-          <img src="/images/<%=data[i].image%>" alt="">
+
           <p><a href="#" class="btn btn-primary" role="add">Add to cart</a></p>
         </div>
       </div>
