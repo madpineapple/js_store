@@ -4,13 +4,10 @@ const router = express.Router();
 //User model
 const db = require('../models/User');
 
-//Bake Shop
-// router.get('/bake_shop',(req, res)=> res.render('bake_shop'));
-
 //Catering
 router.get('/catering',(req, res)=> res.render('catering'));
 
-//Display products
+// Bake shop,display products
 
 router.get('/bake_shop',(req, res)=>{
 
@@ -19,6 +16,11 @@ router.get('/bake_shop',(req, res)=>{
     console.log(result);
     res.render('bake_shop',{data:result});
   })
+});
+
+//Cart route, transfer products to cart object
+router.get('/add-to-cart/:id', (req, res)=> {
+  const productID = req.params.id;
 });
 
 module.exports = router;
