@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Cart = require("./cart");
 
 //User model
 const db = require('../models/User');
@@ -19,8 +20,25 @@ router.get('/bake_shop',(req, res)=>{
 });
 
 //Cart route, transfer products to cart object
-router.get('/add-to-cart/:id', (req, res)=> {
+router.get('/add_to_cart/:id', (req, res)=> {
+  //check if cart has an object otherwise pass empty object
   const productID = req.params.id;
+  console.log(productID);
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+
+  //mysql statement find product by // ID
+  let sql ="SELECT * FROM products WHERE id = ? LIMIT 1";
+  let query = db.query(sql, id, (err, result)=>{
+      if(err) throw err;
+      console.log(result);
+      if(result.length){
+        cart.add(product, product.id);
+        req.session.cart;
+        console.log(req.session.cart);
+        res.redirect("/");
+      }
+
+  });
 });
 
 module.exports = router;
