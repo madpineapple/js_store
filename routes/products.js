@@ -14,7 +14,7 @@ router.get('/bake_shop',(req, res)=>{
 
    db.query("SELECT * FROM products",(err, result)=>{
     if(err) throw(err);
-    console.log(result);
+    //console.log(result);
     res.render('bake_shop',{data:result});
   })
 });
