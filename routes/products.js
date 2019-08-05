@@ -21,7 +21,7 @@ router.get('/bake_shop',(req, res)=>{
 });
 
 //Cart route, transfer products to cart object might not need
-router.post("/add_to_cart/:id", (req, res, next)=> {
+router.get("/add_to_cart/:id", (req, res, next)=> {
   console.log("hellooo");
   //check if cart has an object otherwise pass empty object
   const productID = req.params.id;

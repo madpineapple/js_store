@@ -11,12 +11,7 @@
             <h3><%=data[i].name%></h3>
             <p><%=data[i].description%></p>
             <p><%=data[i].price%></p>
-            <div>
-               <form action="./cart/<%=data[i].id%>" method="POST">
-                <input type="submit" name = "add to cart" class ="btn btn-primary">
-
-              </form>
-            </div>
+            <p><a href="/add_to_cart/<%=data[i].id%>" class="btn btn-primary" role="button">Add to cart</a></p>
 
           </div>
         </div>
