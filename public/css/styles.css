@@ -28,9 +28,14 @@ body{
 
 #product_img{
   height: auto;
-  width: auto; 
+  width: auto;
   max-width:500px;
   max-height: 500px;
+}
+
+.pagination{
+  text-align: center;
+  font-size: 20px;
 }
 
 footer{

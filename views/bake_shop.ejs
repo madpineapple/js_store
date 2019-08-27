@@ -12,13 +12,41 @@
             <p><%=data[i].description%></p>
             <p><%=data[i].price%></p>
             <p><a href="/add_to_cart/<%=data[i].id%>" class="btn btn-primary" role="button">Add to cart</a></p>
-
           </div>
         </div>
-    <%  }
+    <%}
    }%>
+   <div class="row">
+     <div class="col-md-6 m-auto" id = "products">
+       <% if (pageCount > 1) { %>
+    <ul class="pagination">
+      <% if (currentPage > 1) { %>
+       <li><a href="/products/bake_shop/?page=1">&laquo;</a></li>
+      <% } %>
+      <% var i = 1;
+      if (currentPage > 5) {
+      i = +currentPage - 4;
+      } %>
+      <% if (i !== 1) { %>
+       <li class="disabled"><a href="#">...</a></li>
+      <% } %>
+      <% for (i; i<=pageCount; i++) { %>
+        <% if (currentPage == i) { %>
+         <li class="active"><span><%= i %> <span class="sr-only">(current)</span></span></li>
+        <% } else { %>
+         <li><a href="/products/bake_shop/?page=<%= i %>"><%= i %></a></li>
+        <% } %>
+        <% if (i == (+currentPage + 4)) { %>
+         <li class="disabled"><a href="#">...</a></li>
+        <% break; } %>
+      <% } %>
+      <% if (currentPage != pageCount) { %>
+       <li><a href="/products/bake_shop/?page=<%= pageCount %>">&raquo;</a></li>
+      <% } %>
+    </ul>
+    <% } %>
 
-
-
+     </div>
+   </div>
 
   </div>

@@ -14,9 +14,32 @@ router.get('/bake_shop',(req, res)=>{
 
    db.query("SELECT * FROM products",(err, result)=>{
     if(err) throw(err);
-    //console.log(result);
-    res.render('bake_shop',{data:result});
-  })
+
+    //paginate(hopefully)
+    const pageSize = 2; //how many results by page
+    const pageCount = Math.ceil(result.length/pageSize);
+    let currentPage = 1; //set current page
+    let resultArray = [];
+    let resultList = [];
+
+    //insert data into array
+    while( result.length > 0){
+      resultArray.push(result.splice(0, pageSize));
+    }
+    //set current page if specifed as get variable (eg: /?page=2)
+	if (typeof req.query.page !== 'undefined') {
+		currentPage = +req.query.page;
+	}
+  //show list of products
+	resultList = resultArray[+currentPage - 1];
+//render page and pass  data to page
+    res.render('bake_shop',{
+      data:resultList,
+      pageSize: pageSize,
+		  pageCount: pageCount,
+		  currentPage: currentPage
+    });
+  });
 
 });
 
