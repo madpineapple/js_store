@@ -77,6 +77,15 @@ router.get("/add_to_cart/:id:price", (req, res, next)=> {
   });
 });
 
+//View cart route
+router.get('/view_cart', (req,res)=>{
+  if(!req.session.cart){
+    return res.render('view_cart', {products: null});
+  }
+  const cart = new Cart(req.session.cart);
+  res.render('view_cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
+});
+
 
 
 module.exports = router;
