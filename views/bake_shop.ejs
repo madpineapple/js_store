@@ -11,7 +11,7 @@
             <h3><%=data[i].name%></h3>
             <p><%=data[i].description%></p>
             <p><%=data[i].price%></p>
-            <p><a href="/add_to_cart/<%=data[i].id%>" class="btn btn-primary" role="button">Add to cart</a></p>
+            <p><a href="/add_to_cart/<%=data[i].id%><%=data[i].price%>" class="btn btn-primary" role="button">Add to cart</a></p>
           </div>
         </div>
     <%}

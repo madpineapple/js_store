@@ -55,22 +55,23 @@ router.get('/bake_shop',(req, res)=>{
 });
 
 //Cart route, transfer products to cart object
-router.get("/add_to_cart/:id", (req, res, next)=> {
+router.get("/add_to_cart/:id:price", (req, res, next)=> {
   //check if cart has an object otherwise pass empty object
   const productID = req.params.id;
-
+  const productPrice = req.params.price;
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
   //mysql statement find product by // ID
   let sql ="SELECT * FROM products WHERE id = ? LIMIT 1";
-  let query = db.query(sql, productID, (err, result)=>{
+  let query = db.query(sql, productID, (err, result )=>{
       if(err) throw err;
-      console.log(result);
+      // console.log(result);
       if(result.length){
-        cart.add(result, result.id);
+
+        cart.add(result, productID, productPrice);
         req.session.cart= cart;
         console.log(req.session.cart);
-        res.redirect("/");
+        res.redirect("/bake_shop");
       }
 
   });
