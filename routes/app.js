@@ -59,6 +59,9 @@ router.get("/add_to_cart/:id:price", (req, res, next)=> {
   //check if cart has an object otherwise pass empty object
   const productID = req.params.id;
   const productPrice = req.params.price;
+  const name = find(productID);
+
+  
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
   //mysql statement find product by // ID
@@ -68,15 +71,29 @@ router.get("/add_to_cart/:id:price", (req, res, next)=> {
       // console.log(result);
       if(result.length){
 
-        cart.add(result, productID, productPrice);
+
+        cart.add(result, productID, productPrice, name);
         req.session.cart= cart;
         console.log(req.session.cart);
-        res.redirect("/bake_shop");
+        res.redirect("/view_cart");
       }
-
   });
 });
 
+//function find
+function find(productID){
+  let sql="SELECT name FROM products WHERE id = ? LIMIT 1";
+  let query = db.query(sql, productID, (err, name )=>{
+ if(err){
+   throw err;
+ }
+ if(name.length){
+
+   console.log(name);
+   return name;
+ }
+});
+}
 //View cart route
 router.get('/view_cart', (req,res)=>{
   if(!req.session.cart){
@@ -85,6 +102,18 @@ router.get('/view_cart', (req,res)=>{
   const cart = new Cart(req.session.cart);
   res.render('view_cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
 });
+
+//checkout route
+router.get('/checkout',(req,res)=>{
+  //check to see if a shopping cart exists
+    if(!req.session.cart){
+        return res.redirect('/view_cart');
+    }
+    const cart = new Cart(req.session.cart);
+    const errMsg = req.flash('error')[0];
+    return res.render('checkout',{total: cart.totalPrice, errMsg: errMsg, noErrors: !errMsg});
+  });
+
 
 
 

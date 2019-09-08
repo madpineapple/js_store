@@ -1,14 +1,37 @@
 <h1>View Cart</h1>
 
-<div class="conatiner">
-
+<div class="container" id="cart">
+<% if( products) { %>
   <div class="row">
     <div class="col-md-6 m-auto">
       <ul class ="list-group">
-        
+       <% for (var i =0; i < products.length;i++) {%>
+        <li class= "list-group-item">
+          <strong><%= products[i].name %></strong>
+          <span class='label label-default'>QTY:<%= products[i].qty %></span>
+          <span class='label label-success'>$<%= products[i].price %></span>
+          <button type="button" name="button">Delete</button>
+        </li>
+      <% } %>
       </ul>
-
     </div>
   </div>
-
+  <div class="row">
+    <div class='col-md-6 m-auto'>
+      <span class='label label-success'>Total Price:$<%= totalPrice  %></span>
+    </div>
+  </div>
+ <hr>
+ <div class="row">
+   <div class="col-md-6 m-auto">
+     <a href="/checkout" class="btn btn-success" role= "button">Checkout</a>
+   </div>
+ </div>
+<% }else { %>
+<div class="row">
+  <div class="col-md-6 m-auto">
+    <h2>No items in cart</h2>
+  </div>
+</div>
+<% } %>
 </div>

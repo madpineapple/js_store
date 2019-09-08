@@ -7,7 +7,7 @@ module.exports = function Cart(oldCart){
   this.totalPrice = oldCart.totalPrice || 0;
 
 //add new item to cart
-  this.add = function(item, id, price){
+  this.add = function(item, id, price, name){
 
   //check if item exists in cart
    var storedItem = this.items[id];
@@ -18,8 +18,9 @@ module.exports = function Cart(oldCart){
 
    storedItem.qty++; //increase quantity by one
    storedItem.price = price * storedItem.qty;
+   storedItem.name= name
    this.totalQty++;
-   this.totalPrice += parseFloat(price);
+   this.totalPrice += parseFloat(price,2);
 
   }
   this.generateArray = function(){
