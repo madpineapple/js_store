@@ -4,7 +4,7 @@ const mysql = require('mysql');
 const options = {
   host : 'localhost',
   user : 'root',
-  password : 'K@Lender12',
+  password : 'password',
   database: 'userpassdb',
   checkExpirationInterval: 900000,// How frequently expired sessionswill be cleared in milliseconds
   expiration: 1512671400000,// The maximum age of a valid session; milliseconds.

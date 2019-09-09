@@ -7,7 +7,8 @@
       <ul class ="list-group">
        <% for (var i =0; i < products.length;i++) {%>
         <li class= "list-group-item">
-          <strong><%= products[i].name %></strong>
+          <img id ='thumbnail' src="/images/<%= products[i].item.image %>" alt="">
+          <strong><%= products[i].item.name %></strong>
           <span class='label label-default'>QTY:<%= products[i].qty %></span>
           <span class='label label-success'>$<%= products[i].price %></span>
           <button type="button" name="button">Delete</button>

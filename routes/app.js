@@ -26,8 +26,8 @@ router.get('/bake_shop',(req, res)=>{
    db.query("SELECT * FROM products",(err, result)=>{
     if(err) throw(err);
 
-    //paginate(hopefully)
-    const pageSize = 2; //how many results by page
+    //pagination variables
+    const pageSize = 6; //how many results by page
     const pageCount = Math.ceil(result.length/pageSize);
     let currentPage = 1; //set current page
     let resultArray = [];
@@ -35,7 +35,8 @@ router.get('/bake_shop',(req, res)=>{
 
     //insert data into array
     while( result.length > 0){
-      resultArray.push(result.splice(0, pageSize));
+      for(var i = 0; i <result.length; i+=pageSize)
+      resultArray.push(result.splice(i, i+pageSize));
     }
     //set current page if specifed as get variable (eg: /?page=2)
 	if (typeof req.query.page !== 'undefined') {
@@ -55,13 +56,9 @@ router.get('/bake_shop',(req, res)=>{
 });
 
 //Cart route, transfer products to cart object
-router.get("/add_to_cart/:id:price", (req, res, next)=> {
+router.get("/add_to_cart/:id", (req, res, next)=> {
   //check if cart has an object otherwise pass empty object
   const productID = req.params.id;
-  const productPrice = req.params.price;
-  const name = find(productID);
-
-  
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
   //mysql statement find product by // ID
@@ -70,30 +67,34 @@ router.get("/add_to_cart/:id:price", (req, res, next)=> {
       if(err) throw err;
       // console.log(result);
       if(result.length){
-
-
-        cart.add(result, productID, productPrice, name);
+        //stringify and parse results using JSON
+        var result= JSON.parse(JSON.stringify(result[0]));
+        //send items to cart.js
+        cart.add(result, productID);
         req.session.cart= cart;
         console.log(req.session.cart);
         res.redirect("/view_cart");
       }
   });
 });
+router.get('/product_view/:id', (req, res)=>{
+  const productID = req.params.id;
 
-//function find
-function find(productID){
-  let sql="SELECT name FROM products WHERE id = ? LIMIT 1";
-  let query = db.query(sql, productID, (err, name )=>{
- if(err){
-   throw err;
- }
- if(name.length){
 
-   console.log(name);
-   return name;
- }
+  let sql ="SELECT * FROM products WHERE id = ? LIMIT 1";
+  let query = db.query(sql, productID, (err, result )=>{
+      if(err) throw err;
+      // console.log(result);
+      if(result.length){
+        const data = result;
+        console.log(data);
+        res.render('product_view',{data: data});
+
+      };
+    });
+
 });
-}
+
 //View cart route
 router.get('/view_cart', (req,res)=>{
   if(!req.session.cart){

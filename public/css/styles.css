@@ -22,15 +22,32 @@ body{
 
 
 #products{
+  padding-top: 50px;
   text-align: center;
+  margin:0 auto;
+  vertical-align: middle;
   background-color:#FFB6C1;
 }
 
 #product_img{
   height: auto;
   width: auto;
-  max-width:500px;
-  max-height: 500px;
+  max-width:200px;
+  max-height: 200px;
+}
+
+.pagination{
+  position:relative;
+  left:50%;
+  float:left;
+  margin-right:0;
+  margin-left:0;
+}
+#thumbnail{
+  height: auto;
+  width: auto;
+  max-width:50px;
+  max-height: 50px;
 }
 
 .pagination{

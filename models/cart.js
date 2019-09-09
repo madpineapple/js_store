@@ -7,7 +7,7 @@ module.exports = function Cart(oldCart){
   this.totalPrice = oldCart.totalPrice || 0;
 
 //add new item to cart
-  this.add = function(item, id, price, name){
+  this.add = function(item, id){
 
   //check if item exists in cart
    var storedItem = this.items[id];
@@ -17,17 +17,15 @@ module.exports = function Cart(oldCart){
    }
 
    storedItem.qty++; //increase quantity by one
-   storedItem.price = price * storedItem.qty;
-   storedItem.name= name
+   storedItem.price = storedItem.item.price * storedItem.qty;
    this.totalQty++;
-   this.totalPrice += parseFloat(price,2);
+   this.totalPrice += storedItem.price;
 
   }
   this.generateArray = function(){
     var arr = [];
     for (var id in this.items){
       arr.push(this.items[id]);
-
     }
     return arr;
   }
