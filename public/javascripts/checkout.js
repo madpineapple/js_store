@@ -1,21 +1,39 @@
-const express = require('express');
-const stripe = require('stripe')('sk_test_...');
+//Connect to stripe and checkout
+Stripe.setPublishableKey('sk_test_XM0N7UuPkAyR1gVHPS7rjD6C00G1SydN3W');
+var $form=$('#payment-form');
 
-var elements = stripe.elements();
 
-//create token
-stripe.createToken(card).then(function(result) {
-  // Handle result.error or result.token
-
+$form.submit(function(event){
+  $form.find('button').prop('disabled', true);
+  Stripe.card.createToken({
+  number: $('#card-number').val(),
+  cvc: $('#card-cvc').val(),
+  exp_month: $('#card-expiry-month').val(),
+  exp_year: $('#card-expiry-year').val(),
+  name: $('#card-name').val()
+}, stripeResponseHandler);
+return false;
 });
 
-stripe.createToken('bank_account', {
-  country: 'US',
-  currency: 'usd',
-  routing_number: '110000000',
-  account_number: '000123456789',
-  account_holder_name: 'Jenny Rosen',
-  account_holder_type: 'individual',
-}).then(function(result) {
-  // Handle result.error or result.token
-});
+function stripeResponseHandler(status, response) {
+  if (response.error) { // Problem!
+
+    // Show the errors on the form
+    $('#charge-error').text(response.error.message);
+    $('#charge-error').removeClass('hidden');
+
+    $form.find('button').prop('disabled', false); // Re-enable submission
+
+  } else { // Token was created!
+
+    // Get the token ID:
+    var token = response.id;
+
+    // Insert the token into the form so it gets submitted to the server:
+    $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+
+    // Submit the form:
+    $form.get(0).submit();
+
+  }
+}

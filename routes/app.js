@@ -115,7 +115,43 @@ router.get('/checkout',(req,res)=>{
     return res.render('checkout',{total: cart.totalPrice, errMsg: errMsg, noErrors: !errMsg});
   });
 
+router.post('/checkout',( req, res)=>{
+  if(!req.session.cart){
+      return res.redirect('/view_cart');
+  }
+  const cart = new Cart(req.session.cart);
+  //copied from stripe api
+  const stripe = require("stripe")("sk_test_XM0N7UuPkAyR1gVHPS7rjD6C00G1SydN3W");
+  stripe.charges.create({
+  amount: cart.totalPrice * 100,
+  currency: "usd",
+  source: req.body.stripeToken, // obtained with Stripe.js
+  description: "Charge for jenny.rosen@example.com"
+}, function(err, charge) {
+  // asynchronously called
+  if(err){
+    req.flash('error', err.message);
+    return res.redirect('/checkout');
+  }
 
+  const order = new Order({
+    user: req.user,
+    cart: cart,
+    address: req.body.address,
+    name: req.body.name,
+    paymentId: charge.id
+  });
+
+  //save order in database
+  order.save((err, result)=>{
+    //process after succesful transaction
+    //Should install an if(err) statement at a later date
+    req.flash('success', 'purchased!');
+    req.session.cart = null;
+    res.redirect('/');
+    });
+  });
+});
 
 
 module.exports = router;
