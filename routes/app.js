@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const {ensureAuthenticated} = require('../config/auth');
 const Cart = require("../models/cart");
+const stripe = require('stripe')('SECRET KEY');
+
+
 
 //User model
 const db = require('../models/User');
@@ -119,39 +122,37 @@ router.post('/checkout',( req, res)=>{
   if(!req.session.cart){
       return res.redirect('/view_cart');
   }
+  console.log(req.body);
   const cart = new Cart(req.session.cart);
   //copied from stripe api
-  const stripe = require("stripe")("sk_test_XM0N7UuPkAyR1gVHPS7rjD6C00G1SydN3W");
-  stripe.charges.create({
-  amount: cart.totalPrice * 100,
-  currency: "usd",
-  source: req.body.stripeToken, // obtained with Stripe.js
-  description: "Charge for jenny.rosen@example.com"
-}, function(err, charge) {
-  // asynchronously called
-  if(err){
-    req.flash('error', err.message);
-    return res.redirect('/checkout');
-  }
+  (async () => {
+   const session = await stripe.checkout.sessions.create({
+     payment_method_types: ['card'],
+     line_items: [{
+       name: 'T-shirt',
+       description: 'Comfortable cotton t-shirt',
+       images: ['https://example.com/t-shirt.png'],
+       amount: 500,
+       currency: 'usd',
+       quantity: 1,
+     }],
+     success_url: 'http://localhost:3000/',
+     cancel_url: 'http://localhost:3000/checkout',
+   });
+ })();
+ console.log(session);
+ var stripe = Stripe('PUBLIC KEY');
 
-  const order = new Order({
-    user: req.user,
-    cart: cart,
-    address: req.body.address,
-    name: req.body.name,
-    paymentId: charge.id
-  });
-
-  //save order in database
-  order.save((err, result)=>{
-    //process after succesful transaction
-    //Should install an if(err) statement at a later date
-    req.flash('success', 'purchased!');
-    req.session.cart = null;
-    res.redirect('/');
-    });
-  });
+ stripe.redirectToCheckout({
+   // Make the id field from the Checkout Session creation API response
+   // available to this file, so you can provide it as parameter here
+   // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+   sessionId: '{{CHECKOUT_SESSION_ID}}'
+ }).then(function (result) {
+   // If `redirectToCheckout` fails due to a browser or network
+   // error, display the localized error message to your customer
+   // using `result.error.message`.
+ });
 });
-
 
 module.exports = router;

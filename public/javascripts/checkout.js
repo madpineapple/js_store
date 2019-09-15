@@ -2,7 +2,7 @@
 Stripe.setPublishableKey('sk_test_XM0N7UuPkAyR1gVHPS7rjD6C00G1SydN3W');
 var $form=$('#payment-form');
 
-
+console.log('hello')
 $form.submit(function(event){
   $form.find('button').prop('disabled', true);
   Stripe.card.createToken({

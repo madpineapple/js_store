@@ -5,57 +5,53 @@
       <h1>Checkout</h1>
       <h2>Total:$<%=total%></h2>
     </div>
-    
-    <form class="payment-form" action="/checkout" method="post">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" class='form-control' required name="name">
-          </div>
-        </div>
-        <div class="col-xs-12">
-            <div class="form-group">
-              <label for="address">Address</label>
-              <input type="text" id='address' class='form-control' required name="address">
-            </div>
-          </div>
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="card-name">Card Holder Name</label>
-              <input type="text" id='card-name' class='form-control' required>
-            </div>
-          </div>
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="card-number">Credit Card Number</label>
-              <input type="text" id='card-number' class='form-control' required>
-            </div>
-          </div>
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="card-expiration-month">Credit Card Expiration Month</label>
-              <input type="text" id='card-expiry-month' class='form-control' required>
-            </div>
-          </div>
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="card-expiration-year">Credit Card Expiration Year</label>
-              <input type="text" id='card-expiry-year' class='form-control' required>
-            </div>
-          </div>
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="cvc">CVC Number</label>
-              <input type="text" id='cvc' class='form-control' required>
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-success">Purchase</button>
 
+    <form class="payment-form" action="/checkout" method="post">
+
+      <div class="form-row">
+        <label for="name">Name</label>
+        <div id="card-element">
+          <input type="text" id='name'name ="name"  class='form-control' >
+        </div>
+     </div>
+     <div class="form-row">
+       <label for="address">Address</label>
+       <div id="card-element">
+       <input type="text" id='address'name ="adress"  class='form-control' >
+     </div>
+    </div>
+    <div class="form-row">
+      <label for="card-name">Card Holder Name</label>
+      <div id="card-element">
+      <input type="text" id='card-name' name ="cardName"  class='form-control' >
+    </div>
+   </div>
+   <div class="form-row">
+     <label for="card-number">Credit Card Number</label>
+     <div id="card-element">
+     <input type="text" id='card-number' name="cardNumber"  class='form-control' >
+   </div>
+  </div>
+  <div class="form-row">
+    <label for="card-expiration-month">Credit Card Expiration Month</label>
+    <div id="card-element">
+    <input type="text" id='card-expiry-month' name="cardExpiryMonth"  class='form-control' >
+  </div>
+ </div>
+ <div class="form-row">
+   <label for="card-expiration-year">Credit Card Expiration Year</label>
+   <div id="card-element">
+   <input type="text" id='card-expiry-year' name="cardExpiryYearth"  class='form-control' >
+ </div>
+</div>
+<div class="form-row">
+  <label for="cvc">CVC Number</label>
+  <div id="card-element">
+  <input type="text"  id='cvc' name="cvc"  class='form-control' >
+</div>
+</div>
+
+       <button type="submit" id="#checkout-button " >Pay</button>
     </form>
   </div>
-
-
-<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
-<script  src = "javascripts/checkout.js"></script>
+  <!-- <script  src = "javascripts/checkout.js"></script> -->
