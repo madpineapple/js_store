@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const {ensureAuthenticated} = require('../config/auth');
 const Cart = require("../models/cart");
-const stripe = require('stripe')('SECRET KEY');
-
-
+const keyPublishable = process.env.PUBLISHABLE_KEY;
+const keySecret = process.env.SECRET_KEY;
+const stripe = require('stripe')(keySecret);
 
 //User model
 const db = require('../models/User');
@@ -113,9 +114,10 @@ router.get('/checkout',(req,res)=>{
     if(!req.session.cart){
         return res.redirect('/view_cart');
     }
+
     const cart = new Cart(req.session.cart);
     const errMsg = req.flash('error')[0];
-    return res.render('checkout',{total: cart.totalPrice, errMsg: errMsg, noErrors: !errMsg});
+    return res.render('checkout',{total: cart.totalPrice, errMsg: errMsg, noErrors: !errMsg, keyPublishable:keyPublishable});
   });
 
 router.post('/checkout',( req, res)=>{
@@ -125,34 +127,25 @@ router.post('/checkout',( req, res)=>{
   console.log(req.body);
   const cart = new Cart(req.session.cart);
   //copied from stripe api
-  (async () => {
-   const session = await stripe.checkout.sessions.create({
-     payment_method_types: ['card'],
-     line_items: [{
-       name: 'T-shirt',
-       description: 'Comfortable cotton t-shirt',
-       images: ['https://example.com/t-shirt.png'],
-       amount: 500,
-       currency: 'usd',
-       quantity: 1,
-     }],
-     success_url: 'http://localhost:3000/',
-     cancel_url: 'http://localhost:3000/checkout',
-   });
- })();
- console.log(session);
- var stripe = Stripe('PUBLIC KEY');
+  let amount = cart.totalPrice *100;
 
- stripe.redirectToCheckout({
-   // Make the id field from the Checkout Session creation API response
-   // available to this file, so you can provide it as parameter here
-   // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
-   sessionId: '{{CHECKOUT_SESSION_ID}}'
- }).then(function (result) {
-   // If `redirectToCheckout` fails due to a browser or network
-   // error, display the localized error message to your customer
-   // using `result.error.message`.
- });
+  stripe.customers.create({
+    email:req.body.stripeEmail ,
+    source:req.body.stripeToken
+  })
+  .then(customer =>
+    stripe.charges.create({
+      amount,
+      description: "Sample Charge",
+         currency: "usd",
+         customer: customer.id
+    }))
+    .then(req.session.cart = null)
+  .then(charge => res.render("success"));
 });
+
+router.get('/success',(req, res)=> res.render('success'))
+
+
 
 module.exports = router;
