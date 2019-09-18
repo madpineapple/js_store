@@ -5,7 +5,7 @@ const {ensureAuthenticated} = require('../config/auth');
 const Cart = require("../models/cart");
 const keyPublishable = process.env.PUBLISHABLE_KEY;
 const keySecret = process.env.SECRET_KEY;
-const stripe = require('stripe')(keySecret);
+const stripe = require('stripe')(process.env.SECRET_KEY);
 
 //User model
 const db = require('../models/User');
@@ -106,6 +106,16 @@ router.get('/view_cart', (req,res)=>{
   }
   const cart = new Cart(req.session.cart);
   res.render('view_cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
+});
+
+//Delete an item from the Cart
+router.get('/delete_item/:id', (req,res)=>{
+  const productId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart: {});
+
+  cart.delete(productId);
+  req.session.cart = cart;
+  res.redirect('/view_cart');
 });
 
 //checkout route

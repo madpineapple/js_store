@@ -11,7 +11,7 @@
           <strong><%= products[i].item.name %></strong>
           <span class='label label-default'>QTY:<%= products[i].qty %></span>
           <span class='label label-success'>$<%= products[i].price %></span>
-          <button type="button" name="button">Delete</button>
+          <a href="/delete_item/<%= products[i].item.id%>">Delete</a>
         </li>
       <% } %>
       </ul>

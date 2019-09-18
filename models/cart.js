@@ -8,20 +8,24 @@ module.exports = function Cart(oldCart){
 
 //add new item to cart
   this.add = function(item, id){
-
   //check if item exists in cart
    var storedItem = this.items[id];
 
    if(!storedItem){
      storedItem = this.items[id]={item: item, qty: 0, price:0};
    }
-
    storedItem.qty++; //increase quantity by one
    storedItem.price = storedItem.item.price * storedItem.qty;
    this.totalQty++;
    this.totalPrice += storedItem.price;
+ };
 
-  }
+  //remove item from Cart
+  this.delete = (id)=>{
+    this.totalQty-= this.items[id].qty;
+    this.totalPrice -= this.items[id].item.price;
+    delete this.items[id];
+  };
   this.generateArray = function(){
     var arr = [];
     for (var id in this.items){
