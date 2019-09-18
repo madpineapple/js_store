@@ -21,9 +21,10 @@ module.exports = function Cart(oldCart){
  };
 
   //remove item from Cart
-  this.delete = (id)=>{
+  //price doesnt work though
+  this.removeItem = (id)=>{
     this.totalQty-= this.items[id].qty;
-    this.totalPrice -= this.items[id].item.price;
+    this.totalPrice -= this.items[id].price;
     delete this.items[id];
   };
   this.generateArray = function(){

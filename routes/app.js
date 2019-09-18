@@ -113,7 +113,7 @@ router.get('/delete_item/:id', (req,res)=>{
   const productId = req.params.id;
   const cart = new Cart(req.session.cart ? req.session.cart: {});
 
-  cart.delete(productId);
+  cart.removeItem(productId);
   req.session.cart = cart;
   res.redirect('/view_cart');
 });
