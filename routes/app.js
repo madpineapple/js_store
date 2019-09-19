@@ -105,7 +105,8 @@ router.get('/view_cart', (req,res)=>{
     return res.render('view_cart', {products: null});
   }
   const cart = new Cart(req.session.cart);
-  res.render('view_cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
+  totalPrice=cart.totalPrice();
+  res.render('view_cart', {products: cart.generateArray(), totalPrice: totalPrice});
 });
 
 //Delete an item from the Cart
@@ -126,8 +127,9 @@ router.get('/checkout',(req,res)=>{
     }
 
     const cart = new Cart(req.session.cart);
+    totalPrice=cart.totalPrice();
     const errMsg = req.flash('error')[0];
-    return res.render('checkout',{total: cart.totalPrice, errMsg: errMsg, noErrors: !errMsg, keyPublishable:keyPublishable});
+    return res.render('checkout',{total: totalPrice, errMsg: errMsg, noErrors: !errMsg, keyPublishable:keyPublishable});
   });
 
 router.post('/checkout',( req, res)=>{

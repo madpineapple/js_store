@@ -39,14 +39,17 @@
         </ul>
         <ul class="navbar-nav navbar-right">
           <li class="nav-item">
-            <a id ="profile" class="nav-link fas fa-user-circle" href="/dashboard"></a>
+            <a class="nav-link" href="/dashboard"><i id ="icon" class=" fas fa-user-circle"></i><br>
+            <span class="label label-success" id='tag'>
+              <% if(login){%><%='Profile'%><%}else{%><%='Login'%><%}%></span></a>
           </li>
-          <li class="nav-item">
-        <a class="nav-link " href="/view_cart"><i class="fas fa-shopping-cart"></i><br>Cart <br>
-          <span class="label label-success"><% if(session.cart) {%>
-            <%= session.cart.totalQty %><%}%></span>
-        </a>
-      </li>
+              <li class="nav-item">
+              <a class="nav-link " href="/view_cart"><i id ="icon" class="fas fa-shopping-cart"></i><br>
+              <span class="label label-success" id='tag'>Cart</span>
+            </a>
+          </li>
+            <span class="label label-secondary" id='amnt' ><% if(session.cart) {%>
+              <%= session.cart.totalQty %><%}%></span>
         </ul>
       </div>
     </nav>

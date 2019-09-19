@@ -3,8 +3,16 @@ body{
   background-image: url('/images/background.png');
   background-repeat: no-repeat;
   height:100%;
-
 }
+@media only screen and (max-width: 768px) {
+  #icon{
+    display: none;
+  }
+  #amnt{
+      display: none;
+  }
+}
+
 #options{
   border-top:solid;
   border-left: solid;
@@ -16,11 +24,23 @@ body{
   background-color: white;
 }
 
-#profile{
-  font-size: 50px;
+#icon{
+  font-size: 40px;
+  text-align: center;
 }
 
-
+#tag{
+  font-size:20px;
+  text-align: center;
+}
+#amnt{
+  font-size: 15px;
+}
+#totalPrice{
+  padding-top: 10px;
+  text-align: center;
+  color: black;
+}
 #products{
   padding-top: 50px;
   text-align: center;

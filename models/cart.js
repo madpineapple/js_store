@@ -4,7 +4,7 @@ const db = require('../models/User');
 module.exports = function Cart(oldCart){
   this.items= oldCart.items || {};
   this.totalQty = oldCart.totalQty ||0;
-  this.totalPrice = oldCart.totalPrice || 0;
+  // this.totalPrice = oldCart.totalPrice || 0;
 
 //add new item to cart
   this.add = function(item, id){
@@ -16,15 +16,19 @@ module.exports = function Cart(oldCart){
    }
    storedItem.qty++; //increase quantity by one
    storedItem.price = storedItem.item.price * storedItem.qty;
+   console.log('storedItem.price');
+   console.log(storedItem.price);
    this.totalQty++;
-   this.totalPrice += storedItem.price;
+   // this.totalPrice += storedItem.price;
+   // console.log('totalPrice');
+   // console.log(this.totalPrice);
  };
 
   //remove item from Cart
   //price doesnt work though
   this.removeItem = (id)=>{
     this.totalQty-= this.items[id].qty;
-    this.totalPrice -= this.items[id].price;
+    // this.totalPrice -= this.items[id].price;
     delete this.items[id];
   };
   this.generateArray = function(){
@@ -34,4 +38,18 @@ module.exports = function Cart(oldCart){
     }
     return arr;
   }
+  this.totalPrice = function() {
+    var arr2 =[]
+
+    for (var id in this.items){
+      arr2.push(this.items[id].price);
+    }
+    console.log('price array')
+    console.log(arr2)
+    console.log(
+   arr2.reduce((a, b) => a + b, 0)
+ )
+ total=(arr2.reduce((a, b) => a + b, 0));
+ return total;
+}
 };
