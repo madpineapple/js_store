@@ -8,8 +8,16 @@
             <img id ="product_img" src="/images/<%=data[i].image%>" alt="">
             <h3><%=data[i].name%></h3>
             <p>$<%=data[i].price%></p>
+            <% if ((data[i].amnt <= 10)&&(data[i].amnt>0)){%>
+              <p>Only <%=data[i].amnt%> are left!</p>
+              <p><a href="/product_view/<%= data[i].id %>"class="btn btn-primary" role="button">View Item</a></p>
+              <p><a href="/add_to_cart/<%= data[i].id %>"class="btn btn-secondary" role="button">Add to cart</a></p>
+            <%}else if (data[i].amnt<=0) {%>
+              <p>Out of stock!</p>
+            <%}else{%>
             <p><a href="/product_view/<%= data[i].id %>"class="btn btn-primary" role="button">View Item</a></p>
             <p><a href="/add_to_cart/<%= data[i].id %>"class="btn btn-secondary" role="button">Add to cart</a></p>
+            <%}%>
           </div>
 
     <%}

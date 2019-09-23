@@ -5,57 +5,66 @@
       <h1>Checkout</h1>
       <h2>Total:$<%=total%></h2>
     </div>
+  </div>
+<div class="container">
+  <div class="row mt-3">
+    <div class="col-md 6 m-auto">
+      <div class="card card-body text-center">
+        <form class="payment-form" action="/checkout" method="post">
 
-    <form class="payment-form" action="/checkout" method="post">
-
-      <div class="form-row">
-        <label for="name">Name</label>
-        <div id="card-element">
-          <input type="text" id='name'name ="name"  class='form-control' >
+          <div class="form-group">
+            <label for="name">Name</label>
+            <div id="card-element">
+              <input type="text" id='name'name ="name"  class='form-control' >
+            </div>
+         </div>
+         <div class="form-group ">
+           <label for="address">Address</label>
+           <div id="card-element">
+           <input type="text" id='address'name ="adress"  class='form-control' >
+         </div>
         </div>
+        <div class="form-group">
+          <label for="card-name">Card Holder Name</label>
+          <div id="card-element">
+          <input type="text" id='card-name' name ="cardName"  class='form-control' >
+        </div>
+       </div>
+       <div class="form-group">
+         <label for="card-number">Credit Card Number</label>
+         <div id="card-element">
+         <input type="text" id='card-number' name="cardNumber"  class='form-control' >
+       </div>
+      </div>
+      <div class="form-group">
+        <label for="card-expiration-month">Credit Card Expiration Month</label>
+        <div id="card-element">
+        <input type="text" id='card-expiry-month' name="cardExpiryMonth"  class='form-control' >
+      </div>
      </div>
-     <div class="form-row">
-       <label for="address">Address</label>
+     <div class="form-group">
+       <label for="card-expiration-year">Credit Card Expiration Year</label>
        <div id="card-element">
-       <input type="text" id='address'name ="adress"  class='form-control' >
+       <input type="text" id='card-expiry-year' name="cardExpiryYearth"  class='form-control' >
      </div>
     </div>
-    <div class="form-row">
-      <label for="card-name">Card Holder Name</label>
+    <div class="form-group">
+      <label for="cvc">CVC Number</label>
       <div id="card-element">
-      <input type="text" id='card-name' name ="cardName"  class='form-control' >
+      <input type="text"  id='cvc' name="cvc"  class='form-control' >
     </div>
-   </div>
-   <div class="form-row">
-     <label for="card-number">Credit Card Number</label>
-     <div id="card-element">
-     <input type="text" id='card-number' name="cardNumber"  class='form-control' >
-   </div>
-  </div>
-  <div class="form-row">
-    <label for="card-expiration-month">Credit Card Expiration Month</label>
-    <div id="card-element">
-    <input type="text" id='card-expiry-month' name="cardExpiryMonth"  class='form-control' >
-  </div>
- </div>
- <div class="form-row">
-   <label for="card-expiration-year">Credit Card Expiration Year</label>
-   <div id="card-element">
-   <input type="text" id='card-expiry-year' name="cardExpiryYearth"  class='form-control' >
- </div>
-</div>
-<div class="form-row">
-  <label for="cvc">CVC Number</label>
-  <div id="card-element">
-  <input type="text"  id='cvc' name="cvc"  class='form-control' >
-</div>
-</div>
+    </div>
 
-       <script src="//checkout.stripe.com/v2/checkout.js"
-        class="stripe-button"
-        data-key= <%=keyPublishable%>
-        data-locale="auto"
-        data-description="Sample Charge"
-        data-amount='<%= total *100 %>' </script>
-    </form>
+           <script src="//checkout.stripe.com/v2/checkout.js"
+            class="stripe-button"
+            data-key= '<%=keyPublishable%>'
+            data-locale="auto"
+            data-description="Sample Charge"
+            data-amount='<%= total *100 %>' </script>
+        </form>
+      </div>
+
+    </div>
   </div>
+
+</div>

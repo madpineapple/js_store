@@ -105,6 +105,7 @@ router.get('/view_cart', (req,res)=>{
     return res.render('view_cart', {products: null});
   }
   const cart = new Cart(req.session.cart);
+  //fetch total price
   totalPrice=cart.totalPrice();
   res.render('view_cart', {products: cart.generateArray(), totalPrice: totalPrice});
 });
@@ -127,6 +128,7 @@ router.get('/checkout',(req,res)=>{
     }
 
     const cart = new Cart(req.session.cart);
+    //fetch total price
     totalPrice=cart.totalPrice();
     const errMsg = req.flash('error')[0];
     return res.render('checkout',{total: totalPrice, errMsg: errMsg, noErrors: !errMsg, keyPublishable:keyPublishable});
@@ -138,8 +140,22 @@ router.post('/checkout',( req, res)=>{
   }
   console.log(req.body);
   const cart = new Cart(req.session.cart);
+  totalPrice=cart.totalPrice();
   //copied from stripe api
-  let amount = cart.totalPrice *100;
+  let amount = totalPrice *100;
+  idArr =cart.idArray();
+  qtyArr= cart.qtyArray();
+
+   let sql="UPDATE products SET amnt = amnt - qty  WHERE  id = ? qty =?"
+   for(i= 0; i<idArr.length; i++){
+     let query= db.query(sql,qtyArr[i],idArr[i], err=>{
+       if (err){
+         throw err;
+       }else{
+         console.log("succesfully updated")
+       }
+     })
+   }
 
   stripe.customers.create({
     email:req.body.stripeEmail ,
@@ -152,9 +168,12 @@ router.post('/checkout',( req, res)=>{
          currency: "usd",
          customer: customer.id
     }))
+
     .then(req.session.cart = null)
   .then(charge => res.render("success"));
+
 });
+
 
 router.get('/success',(req, res)=> res.render('success'))
 
