@@ -140,15 +140,18 @@ router.post('/checkout',( req, res)=>{
   }
   console.log(req.body);
   const cart = new Cart(req.session.cart);
+  //find total price
   totalPrice=cart.totalPrice();
-  //copied from stripe api
   let amount = totalPrice *100;
-  idArr =cart.idArray();
-  qtyArr= cart.qtyArray();
 
-   let sql="UPDATE products SET amnt = amnt - qty  WHERE  id = ? qty =?"
+  //create an array for ids and amnt
+  let idArr =cart.idArray();
+  let amtArr=cart.amntArray();
+  
+  //update amnt in database for purchased items
+   let sql=`UPDATE products SET ? WHERE id = ?`;
    for(i= 0; i<idArr.length; i++){
-     let query= db.query(sql,qtyArr[i],idArr[i], err=>{
+     let query= db.query(sql,[{amnt: amtArr[i]},idArr[i]], err=>{
        if (err){
          throw err;
        }else{
@@ -157,6 +160,7 @@ router.post('/checkout',( req, res)=>{
      })
    }
 
+//copied from stripe api
   stripe.customers.create({
     email:req.body.stripeEmail ,
     source:req.body.stripeToken

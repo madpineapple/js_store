@@ -12,12 +12,11 @@ module.exports = function Cart(oldCart){
    var storedItem = this.items[id];
 
    if(!storedItem){
-     storedItem = this.items[id]={item: item, qty: 0, price:0};
+     storedItem = this.items[id]={item: item, qty: 0, price:0, amnt:0};
    }
    storedItem.qty++; //increase quantity by one
    storedItem.price = storedItem.item.price * storedItem.qty;
-   console.log('storedItem.price');
-   console.log(storedItem.price);
+   storedItem.amnt= storedItem.item.amnt - storedItem.qty;
    this.totalQty++;
 
  };
@@ -48,21 +47,22 @@ module.exports = function Cart(oldCart){
  return total;
 }
 
-//creat an array of ids
+//create an array of ids
 this.idArray= function(){
   var arr =[]
-  for (var id in this.items){
+  for (var id in this.items ){
     arr.push(id);
   }
   return arr;
 }
-//create an arry of qty
-//creat an array of ids
-this.qtyArray= function(){
+
+//creat an array of amnt
+this.amntArray= function(){
   var arr =[]
-  for (var id in this.items){
-    arr.push(this.items[id].qty);
+  for (var id in this.items ){
+    arr.push(this.items[id].amnt);
   }
   return arr;
 }
+
 };
