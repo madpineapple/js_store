@@ -27,6 +27,7 @@ module.exports = function Cart(oldCart){
     delete this.items[id];
   };
 
+//generate array for  cart session
   this.generateArray = function(){
     var arr = [];
     for (var id in this.items){

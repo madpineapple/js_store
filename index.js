@@ -57,6 +57,7 @@ app.use((req, res, next)=>{
 //make my authentication status available
 app.use((req,res,next)=>{
   res.locals.login = req.isAuthenticated();
+  res.locals.user = req.user;
   res.locals.session = req.session;
   next();
 });

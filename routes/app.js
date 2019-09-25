@@ -53,7 +53,8 @@ router.get('/bake_shop',(req, res)=>{
       data:resultList,
       pageSize: pageSize,
 		  pageCount: pageCount,
-		  currentPage: currentPage
+		  currentPage: currentPage,
+
     });
   });
 
@@ -139,6 +140,7 @@ router.post('/checkout',( req, res)=>{
       return res.redirect('/view_cart');
   }
   console.log(req.body);
+  const{name, address, city, country, zip, email} = req.body;
   const cart = new Cart(req.session.cart);
   //find total price
   totalPrice=cart.totalPrice();
@@ -147,7 +149,7 @@ router.post('/checkout',( req, res)=>{
   //create an array for ids and amnt
   let idArr =cart.idArray();
   let amtArr=cart.amntArray();
-  
+
   //update amnt in database for purchased items
    let sql=`UPDATE products SET ? WHERE id = ?`;
    for(i= 0; i<idArr.length; i++){

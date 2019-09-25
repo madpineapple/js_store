@@ -8,10 +8,55 @@
   </div>
 <div class="container">
   <div class="row mt-3">
-    <div class="col-md 6 m-auto">
+    <div class="col-sm-6 col-md-4">
       <div class="card card-body text-center">
+        <%if (login){%>
+          <form class="payment-form" action="/checkout" method="post">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <div id="card-element">
+                <input type="text" id='name'name ="name"  class='form-control' value='<%=user.user%>'>
+              </div>
+           </div>
+           <div class="form-group ">
+             <label for="address">Address</label>
+             <div id="card-element">
+             <input type="text" id='address'name ="adress"  class='form-control' value='<%=user.address%>'>
+           </div>
+          </div>
+          <div class="form-group">
+            <label for="city">City or Town</label>
+            <div id="city">
+            <input type="text" id='city' name ="city"  class='form-control' value='<%=user.city%>'>
+          </div>
+         </div>
+         <div class="form-group">
+           <label for="country">Country</label>
+           <div id="card-element">
+           <input type="text" id='country' name="country"  class='form-control'value='<%=user.country%> '>
+         </div>
+        </div>
+        <div class="form-group">
+          <label for="zip">Zip Code</label>
+          <div id="card-element">
+          <input type="text" id='zip' name="zip"  class='form-control'value='<%=user.zip%>' >
+        </div>
+       </div>
+       <div class="form-group">
+         <label for="email">Email Address</label>
+         <div id="card-element">
+         <input type="text" id='email' name="email"  class='form-control' value='<%=user.email%>'>
+       </div>
+      </div>
+             <script src="//checkout.stripe.com/v2/checkout.js"
+              class="stripe-button"
+              data-key= '<%=keyPublishable%>'
+              data-locale="auto"
+              data-description="Sample Charge"
+              data-amount='<%= total *100 %>' </script>
+          </form>
+          <%}else{%>
         <form class="payment-form" action="/checkout" method="post">
-
           <div class="form-group">
             <label for="name">Name</label>
             <div id="card-element">
@@ -25,36 +70,29 @@
          </div>
         </div>
         <div class="form-group">
-          <label for="card-name">Card Holder Name</label>
-          <div id="card-element">
-          <input type="text" id='card-name' name ="cardName"  class='form-control' >
+          <label for="city">City or Town</label>
+          <div id="city">
+          <input type="text" id='city' name ="city"  class='form-control' >
         </div>
        </div>
        <div class="form-group">
-         <label for="card-number">Credit Card Number</label>
+         <label for="country">Country</label>
          <div id="card-element">
-         <input type="text" id='card-number' name="cardNumber"  class='form-control' >
+         <input type="text" id='country' name="country"  class='form-control' >
        </div>
       </div>
       <div class="form-group">
-        <label for="card-expiration-month">Credit Card Expiration Month</label>
+        <label for="zip">Zip Code</label>
         <div id="card-element">
-        <input type="text" id='card-expiry-month' name="cardExpiryMonth"  class='form-control' >
+        <input type="text" id='zip' name="zip"  class='form-control' >
       </div>
      </div>
      <div class="form-group">
-       <label for="card-expiration-year">Credit Card Expiration Year</label>
+       <label for="email">Email Address</label>
        <div id="card-element">
-       <input type="text" id='card-expiry-year' name="cardExpiryYearth"  class='form-control' >
+       <input type="text" id='email' name="email"  class='form-control' >
      </div>
     </div>
-    <div class="form-group">
-      <label for="cvc">CVC Number</label>
-      <div id="card-element">
-      <input type="text"  id='cvc' name="cvc"  class='form-control' >
-    </div>
-    </div>
-
            <script src="//checkout.stripe.com/v2/checkout.js"
             class="stripe-button"
             data-key= '<%=keyPublishable%>'
@@ -62,6 +100,7 @@
             data-description="Sample Charge"
             data-amount='<%= total *100 %>' </script>
         </form>
+        <%}%>
       </div>
 
     </div>
