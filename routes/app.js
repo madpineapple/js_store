@@ -141,6 +141,14 @@ router.post('/checkout',( req, res)=>{
   }
   console.log(req.body);
   const{name, address, city, country, zip, email} = req.body;
+  let errors = [];
+
+  //Check required fields
+  if(!name|| !address || !city || !country|| !zip|| !email){
+    errors.push({ msg : "Please fill in all fields"});
+  }
+
+  var userInfo = [name, address, city, country, zip, email];
   const cart = new Cart(req.session.cart);
   //find total price
   totalPrice=cart.totalPrice();
@@ -161,7 +169,7 @@ router.post('/checkout',( req, res)=>{
        }
      })
    }
-
+//process payment
 //copied from stripe api
   stripe.customers.create({
     email:req.body.stripeEmail ,
@@ -174,14 +182,13 @@ router.post('/checkout',( req, res)=>{
          currency: "usd",
          customer: customer.id
     }))
-
     .then(req.session.cart = null)
   .then(charge => res.render("success"));
 
 });
 
 
-router.get('/success',(req, res)=> res.render('success'))
+router.get('/success',(req, res)=>res.render('success'));
 
 
 
