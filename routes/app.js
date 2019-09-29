@@ -149,11 +149,13 @@ router.post('/checkout',( req, res)=>{
     // errors.push({ msg : "Please fill in all fields"});
   }else{
     var userInfo = [name, address, city, country, zip, email];
+    console.log(userInfo);
 
     const cart = new Cart(req.session.cart);
     //find total price
     totalPrice=cart.totalPrice();
-  return res.redirect('/checkout2',{userInfo:userInfo})
+      const errMsg = req.flash('error')[0];
+  return res.render('checkout2',{userInfo:userInfo, total: totalPrice, errMsg: errMsg, noErrors: !errMsg, keyPublishable:keyPublishable})
 }});
 //checkout2 route
 router.get('/checkout2',(req,res)=>{
@@ -165,7 +167,6 @@ router.get('/checkout2',(req,res)=>{
     //fetch total price
     totalPrice=cart.totalPrice();
     const errMsg = req.flash('error')[0];
-    return res.render('checkout2',{total: totalPrice, errMsg: errMsg, noErrors: !errMsg, keyPublishable:keyPublishable, userInfo:userInfo});
   });
 
   router.post('/checkout2',( req, res)=>{
@@ -173,15 +174,7 @@ router.get('/checkout2',(req,res)=>{
         return res.redirect('/view_cart');
     }
     console.log(req.body);
-    const{name, address, city, country, zip, email} = req.body;
-    let errors = [];
 
-    //Check required fields
-    if(!name|| !address || !city || !country|| !zip|| !email){
-      console.log('error!')
-      errors.push({ msg : "Please fill in all fields"});
-    }else{
-    var userInfo = [name, address, city, country, zip, email];
 
     const cart = new Cart(req.session.cart);
     //find total price
@@ -218,7 +211,7 @@ router.get('/checkout2',(req,res)=>{
       }))
       .then(req.session.cart = null)
     .then(charge => res.render("success"));
-  }
+
   });
 
 

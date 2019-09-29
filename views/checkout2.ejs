@@ -11,7 +11,8 @@
   <div class="row">
     <div class="col-sm-6 col-md-6" id="products">
       <div class="card card-body text-center">
-        <form class="payment-form" action="/checkout" method="post">
+        <p><%=userInfo%></p>
+        <form class="payment-form" action="/checkout2" method="post">
           <script src="//checkout.stripe.com/v2/checkout.js"
            class="stripe-button"
            data-key= '<%=keyPublishable%>'
@@ -19,7 +20,6 @@
            data-description="Sample Charge"
            data-amount='<%= total *100 %>' </script>
         </form>
-
 
   </div>
 
