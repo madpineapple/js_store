@@ -1,10 +1,16 @@
-<h1>Dashboard</h1>
+<header>
+  <h1>Dashboard</h1>
+</header>
+<div class="row ">
+  <div class="col-md 6 col-md-6" id="products">
+    <p>welcome <%= name %></p>
+    <p><%=user.email%></p>
+    <p><%=user.address%></p>
+    <p><%=user.city%></p>
+    <p><%=user.country%></p>
+    <p><%=user.zip%></p>
 
-<p>welcome <%= name %></p>
-<p><%=user.email%></p>
-<p><%=user.address%></p>
-<p><%=user.city%></p>
-<p><%=user.country%></p>
-<p><%=user.zip%></p>
+    <a href="/users/logout"class="btn btn-secondary">Logout</a>
 
-<a href="/users/logout"class="btn btn-secondary">Logout</a>
+  </div>
+</div>

@@ -1,15 +1,19 @@
 
-
+<div class="container">
   <div class="row">
     <div class="col">
-      <h1>Checkout</h1>
-      <h2>Total:$<%=total%></h2>
+      <header>
+        <h1>Checkout</h1>
+        <h2>Total:$<%=total%></h2>
+      </header>
     </div>
   </div>
 <div class="container">
-  <div class="row mt-3">
+  <div class="row">
     <div class="col-sm-6 col-md-6" id="products">
       <div class="card card-body text-center">
+        <% include ./partials/messages %>
+
         <%if (login){%>
           <form class="payment-form" action="/checkout" method="post">
             <div class="form-group">
@@ -21,7 +25,7 @@
            <div class="form-group ">
              <label for="address">Address</label>
              <div id="card-element">
-             <input type="text" id='address'name ="adress"  class='form-control' value='<%=user.address%>'>
+             <input type="text" id='address'name ="address"  class='form-control' value='<%=user.address%>'>
            </div>
           </div>
           <div class="form-group">
@@ -48,12 +52,8 @@
          <input type="text" id='email' name="email"  class='form-control' value='<%=user.email%>'>
        </div>
       </div>
-             <script src="//checkout.stripe.com/v2/checkout.js"
-              class="stripe-button"
-              data-key= '<%=keyPublishable%>'
-              data-locale="auto"
-              data-description="Sample Charge"
-              data-amount='<%= total *100 %>' </script>
+      <button type="submit" name="button">Confirm address</button>
+
           </form>
           <%}else{%>
         <form class="payment-form" action="/checkout" method="post">
@@ -66,7 +66,7 @@
          <div class="form-group ">
            <label for="address">Address</label>
            <div id="card-element">
-           <input type="text" id='address'name ="adress"  class='form-control' >
+           <input type="text" id='address'name ="address"  class='form-control' >
          </div>
         </div>
         <div class="form-group">
@@ -93,18 +93,14 @@
        <input type="text" id='email' name="email"  class='form-control' >
      </div>
     </div>
-    
-           <script src="//checkout.stripe.com/v2/checkout.js"
-            class="stripe-button"
-            data-key= '<%=keyPublishable%>'
-            data-locale="auto"
-            data-description="Sample Charge"
-            data-amount='<%= total *100 %>' </script>
+    <button type="submit" name="button">Confirm address</button>
         </form>
         <%}%>
       </div>
 
     </div>
   </div>
+
+</div>
 
 </div>

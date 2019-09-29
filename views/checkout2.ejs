@@ -1,0 +1,29 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <header>
+        <h1>Checkout2</h1>
+        <h2>Total:$<%=total%></h2>
+      </header>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 col-md-6" id="products">
+      <div class="card card-body text-center">
+        <form class="payment-form" action="/checkout" method="post">
+          <script src="//checkout.stripe.com/v2/checkout.js"
+           class="stripe-button"
+           data-key= '<%=keyPublishable%>'
+           data-locale="auto"
+           data-description="Sample Charge"
+           data-amount='<%= total *100 %>' </script>
+        </form>
+
+
+  </div>
+
+</div>
+
+</div>
+</div>

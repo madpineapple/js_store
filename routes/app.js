@@ -132,7 +132,7 @@ router.get('/checkout',(req,res)=>{
     //fetch total price
     totalPrice=cart.totalPrice();
     const errMsg = req.flash('error')[0];
-    return res.render('checkout',{total: totalPrice, errMsg: errMsg, noErrors: !errMsg, keyPublishable:keyPublishable});
+    return res.render('checkout',{total: totalPrice, errMsg: errMsg, noErrors: !errMsg});
   });
 
 router.post('/checkout',( req, res)=>{
@@ -144,52 +144,85 @@ router.post('/checkout',( req, res)=>{
   let errors = [];
 
   //Check required fields
-  if(!name|| !address || !city || !country|| !zip|| !email){
-    errors.push({ msg : "Please fill in all fields"});
+  if(!name || !address || !city || !country|| !zip|| !email){
+    console.log('error!')
+    // errors.push({ msg : "Please fill in all fields"});
+  }else{
+    var userInfo = [name, address, city, country, zip, email];
+
+    const cart = new Cart(req.session.cart);
+    //find total price
+    totalPrice=cart.totalPrice();
+  return res.redirect('/checkout2',{userInfo:userInfo})
+}});
+//checkout2 route
+router.get('/checkout2',(req,res)=>{
+  //check to see if a shopping cart exists
+    if(!req.session.cart){
+        return res.redirect('/view_cart');
+    }
+    const cart = new Cart(req.session.cart);
+    //fetch total price
+    totalPrice=cart.totalPrice();
+    const errMsg = req.flash('error')[0];
+    return res.render('checkout2',{total: totalPrice, errMsg: errMsg, noErrors: !errMsg, keyPublishable:keyPublishable, userInfo:userInfo});
+  });
+
+  router.post('/checkout2',( req, res)=>{
+    if(!req.session.cart){
+        return res.redirect('/view_cart');
+    }
+    console.log(req.body);
+    const{name, address, city, country, zip, email} = req.body;
+    let errors = [];
+
+    //Check required fields
+    if(!name|| !address || !city || !country|| !zip|| !email){
+      console.log('error!')
+      errors.push({ msg : "Please fill in all fields"});
+    }else{
+    var userInfo = [name, address, city, country, zip, email];
+
+    const cart = new Cart(req.session.cart);
+    //find total price
+    totalPrice=cart.totalPrice();
+    let amount = totalPrice *100;
+
+    //create an array for ids and amnt
+    let idArr =cart.idArray();
+    let amtArr=cart.amntArray();
+
+    //update amnt in database for purchased items
+     let sql=`UPDATE products SET ? WHERE id = ?`;
+     for(i= 0; i<idArr.length; i++){
+       let query= db.query(sql,[{amnt: amtArr[i]},idArr[i]], err=>{
+         if (err){
+           throw err;
+         }else{
+           console.log("succesfully updated")
+         }
+       })
+     }
+  //process payment
+  //copied from stripe api
+    stripe.customers.create({
+      email:req.body.stripeEmail ,
+      source:req.body.stripeToken
+    })
+    .then(customer =>
+      stripe.charges.create({
+        amount,
+        description: "Sample Charge",
+           currency: "usd",
+           customer: customer.id
+      }))
+      .then(req.session.cart = null)
+    .then(charge => res.render("success"));
   }
-
-  var userInfo = [name, address, city, country, zip, email];
-  const cart = new Cart(req.session.cart);
-  //find total price
-  totalPrice=cart.totalPrice();
-  let amount = totalPrice *100;
-
-  //create an array for ids and amnt
-  let idArr =cart.idArray();
-  let amtArr=cart.amntArray();
-
-  //update amnt in database for purchased items
-   let sql=`UPDATE products SET ? WHERE id = ?`;
-   for(i= 0; i<idArr.length; i++){
-     let query= db.query(sql,[{amnt: amtArr[i]},idArr[i]], err=>{
-       if (err){
-         throw err;
-       }else{
-         console.log("succesfully updated")
-       }
-     })
-   }
-//process payment
-//copied from stripe api
-  stripe.customers.create({
-    email:req.body.stripeEmail ,
-    source:req.body.stripeToken
-  })
-  .then(customer =>
-    stripe.charges.create({
-      amount,
-      description: "Sample Charge",
-         currency: "usd",
-         customer: customer.id
-    }))
-    .then(req.session.cart = null)
-  .then(charge => res.render("success"));
-
-});
+  });
 
 
 router.get('/success',(req, res)=>res.render('success'));
-
 
 
 module.exports = router;
