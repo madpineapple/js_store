@@ -148,14 +148,15 @@ router.post('/checkout',( req, res)=>{
     console.log('error!')
     // errors.push({ msg : "Please fill in all fields"});
   }else{
-    var userInfo = [name, address, city, country, zip, email];
-    console.log(userInfo);
 
     const cart = new Cart(req.session.cart);
     //find total price
     totalPrice=cart.totalPrice();
       const errMsg = req.flash('error')[0];
-  return res.render('checkout2',{userInfo:userInfo, total: totalPrice, errMsg: errMsg, noErrors: !errMsg, keyPublishable:keyPublishable})
+  return res.render('checkout2',{name:name,address:address, city:city,
+    country:country, zip:zip, email:email,
+     total: totalPrice, errMsg: errMsg, noErrors: !errMsg,
+      products: cart.generateArray(),keyPublishable:keyPublishable})
 }});
 //checkout2 route
 router.get('/checkout2',(req,res)=>{
@@ -173,7 +174,7 @@ router.get('/checkout2',(req,res)=>{
     if(!req.session.cart){
         return res.redirect('/view_cart');
     }
-    console.log(req.body);
+    // console.log(name,  address, city, country, zip, email);
 
 
     const cart = new Cart(req.session.cart);
@@ -192,10 +193,14 @@ router.get('/checkout2',(req,res)=>{
          if (err){
            throw err;
          }else{
-           console.log("succesfully updated")
+           console.log("succesfully updated amnt")
          }
        })
      }
+
+ insertOrders(cart);
+ insertSummary(cart,totalPrice);
+
   //process payment
   //copied from stripe api
     stripe.customers.create({
@@ -217,5 +222,42 @@ router.get('/checkout2',(req,res)=>{
 
 router.get('/success',(req, res)=>res.render('success'));
 
+
+
+function insertOrders(cart){
+  let sql ='INSERT into orders(itemID, name, price, qty) VALUES(?, ?, ?, ?)'
+  stuff= cart.generateArray();
+
+  for(var i=0; i<stuff.length; i++){
+    let query=db.query(sql,[stuff[i].item.id, stuff[i].item.name,
+      stuff[i].price, stuff[i].qty], err=>{
+        if (err){
+          throw err;
+        }else{
+          let message="succesfully updated orders";
+          console.log(message);
+          return message;
+        }
+      })
+
+  }
+};
+
+function insertSummary(cart, totalPrice){
+  let sql='INSERT into OrderSummary(totalPrice, totalQty) VALUES( ?, ?)'
+  stuff= cart.totalQty;
+  for(var i=0; i<stuff.length; i++){
+    let query=db.query(sql,[ 2015-04-13, totalPrice, stuff[i].totalQty], err=>{
+        if (err){
+          throw err;
+        }else{
+          let message="succesfully updated OrderSummary";
+          console.log(message);
+          return message;
+        }
+      })
+
+  }
+};
 
 module.exports = router;

@@ -43,10 +43,10 @@ module.exports = function Cart(oldCart){
     for (var id in this.items){
       arr2.push(this.items[id].price);
     }
- //add the prices to create a total price
- total=(arr2.reduce((a, b) => a + b, 0));
- return total;
-}
+     //add the prices to create a total price
+     total=(arr2.reduce((a, b) => a + b, 0));
+     return total;
+    }
 
 //create an array of ids
 this.idArray= function(){

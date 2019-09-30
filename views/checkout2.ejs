@@ -11,8 +11,57 @@
   <div class="row">
     <div class="col-sm-6 col-md-6" id="products">
       <div class="card card-body text-center">
-        <p><%=userInfo%></p>
         <form class="payment-form" action="/checkout2" method="post">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <div id="card-element">
+              <input type="text" id='name'name ="name"  class='form-control' value='<%=name%>'>
+            </div>
+               </div>
+               <div class="form-group ">
+                 <label for="address">Address</label>
+                 <div id="card-element">
+                 <input type="text" id='address'name ="address"  class='form-control' value='<%=address%>'>
+               </div>
+              </div>
+              <div class="form-group">
+                <label for="city">City or Town</label>
+                <div id="city">
+                <input type="text" id='city' name ="city"  class='form-control' value='<%=city%>'>
+              </div>
+             </div>
+             <div class="form-group">
+               <label for="country">Country</label>
+               <div id="card-element">
+               <input type="text" id='country' name="country"  class='form-control'value='<%=country%> '>
+             </div>
+            </div>
+            <div class="form-group">
+              <label for="zip">Zip Code</label>
+              <div id="card-element">
+              <input type="text" id='zip' name="zip"  class='form-control'value='<%=zip%>' >
+            </div>
+           </div>
+           <div class="form-group">
+             <label for="email">Email Address</label>
+             <div id="card-element">
+             <input type="text" id='email' name="email"  class='form-control' value='<%=email%>'>
+           </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <ul class ="list-group">
+               <% for (var i =0; i < products.length;i++) {%>
+                <li class= "list-group-item">
+                  <img id ='thumbnail' src="/images/<%= products[i].item.image %>" alt="">
+                  <strong><%= products[i].item.name %></strong>
+                  <span class='label label-default'>QTY:<%= products[i].qty %></span>
+                  <span class='label label-success'>$<%= products[i].price %></span>
+                </li>
+              <% } %>
+              </ul>
+            </div>
+          </div>
           <script src="//checkout.stripe.com/v2/checkout.js"
            class="stripe-button"
            data-key= '<%=keyPublishable%>'
@@ -21,9 +70,6 @@
            data-amount='<%= total *100 %>' </script>
         </form>
 
-  </div>
-
-</div>
 
 </div>
 </div>
