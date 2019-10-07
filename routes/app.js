@@ -198,8 +198,7 @@ router.get('/checkout2',(req,res)=>{
        })
      }
 
- insertOrders(cart);
- insertSummary(cart,totalPrice);
+  insertOrders(cart,totalPrice);
 
   //process payment
   //copied from stripe api
@@ -224,12 +223,53 @@ router.get('/success',(req, res)=>res.render('success'));
 
 
 
-function insertOrders(cart){
-  let sql ='INSERT into orders(itemID, name, price, qty) VALUES(?, ?, ?, ?)'
-  stuff= cart.generateArray();
+function insertOrders(cart,totalPrice){
+  let sql ="INSERT INTO ordersummary(dateCreated, totalPrice, totalQty) VALUES(?, ?, ?)"
+  let sql2="SELECT last_insert_id()"
+  let sql3 ='INSERT into orders(orderId, itemId, name, price, qty) VALUES(?, ?, ?, ?, ?)'
+  var today= new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //January is 0!
+  var yyyy = today.getFullYear();
 
+  if(dd<10) {
+      dd = '0'+dd
+  }
+
+  if(mm<10) {
+      mm = '0'+mm
+  }
+
+  today = yyyy+ '-' + mm + '-' + dd;
+  console.log(today);
+    db.query(sql,[today, totalPrice, cart.totalQty], (err, result)=>{
+        if (err){
+          throw err;
+        }else{
+          let message="succesfully updated OrderSummary";
+          console.log(message);
+          console.log(result.insertId);
+        }
+      })
+
+db.query(sql2, (err, result)=>{
+  if (err){
+    throw err;
+  }else{
+    console.log('maxID');
+    console.log(result[0]);
+    let maxID= result[0];
+    order(cart, maxID);
+  }
+})
+
+};
+
+function order(cart,maxID){
+  let sql3 ='INSERT into orders(orderId, itemId, name, price, qty) VALUES(?, ?, ?, ?, ?)'
+ let stuff= cart.generateArray();
   for(var i=0; i<stuff.length; i++){
-    let query=db.query(sql,[stuff[i].item.id, stuff[i].item.name,
+    db.query(sql3,[maxID,stuff[i].item.id, stuff[i].item.name,
       stuff[i].price, stuff[i].qty], err=>{
         if (err){
           throw err;
@@ -240,24 +280,9 @@ function insertOrders(cart){
         }
       })
 
-  }
-};
-
-function insertSummary(cart, totalPrice){
-  let sql='INSERT into OrderSummary(totalPrice, totalQty) VALUES( ?, ?)'
-  stuff= cart.totalQty;
-  for(var i=0; i<stuff.length; i++){
-    let query=db.query(sql,[ 2015-04-13, totalPrice, stuff[i].totalQty], err=>{
-        if (err){
-          throw err;
-        }else{
-          let message="succesfully updated OrderSummary";
-          console.log(message);
-          return message;
-        }
-      })
 
   }
-};
+}
+
 
 module.exports = router;
