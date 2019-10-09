@@ -170,33 +170,20 @@ router.get('/checkout2',(req,res)=>{
     const errMsg = req.flash('error')[0];
   });
 
+  //checkout2 post route
   router.post('/checkout2',( req, res)=>{
     if(!req.session.cart){
         return res.redirect('/view_cart');
     }
-    // console.log(name,  address, city, country, zip, email);
-
 
     const cart = new Cart(req.session.cart);
     //find total price
     totalPrice=cart.totalPrice();
     let amount = totalPrice *100;
+    // console.log(name,  address, city, country, zip, email);
+    const customer= [name,  address, city, country, zip, email]
 
-    //create an array for ids and amnt
-    let idArr =cart.idArray();
-    let amtArr=cart.amntArray();
 
-    //update amnt in database for purchased items
-     let sql=`UPDATE products SET ? WHERE id = ?`;
-     for(i= 0; i<idArr.length; i++){
-       let query= db.query(sql,[{amnt: amtArr[i]},idArr[i]], err=>{
-         if (err){
-           throw err;
-         }else{
-           console.log("succesfully updated amnt")
-         }
-       })
-     }
 
   insertOrders(cart,totalPrice);
 
@@ -224,9 +211,9 @@ router.get('/success',(req, res)=>res.render('success'));
 
 
 function insertOrders(cart,totalPrice){
-  let sql ="INSERT INTO ordersummary(dateCreated, totalPrice, totalQty) VALUES(?, ?, ?)"
-  let sql2="SELECT last_insert_id()"
-  let sql3 ='INSERT into orders(orderId, itemId, name, price, qty) VALUES(?, ?, ?, ?, ?)'
+  //sql commands
+  let sql ="INSERT INTO orders(dateCreated, totalPrice, totalQty) VALUES(?, ?, ?)"
+  //get date
   var today= new Date();
   var dd = today.getDate();
   var mm = today.getMonth()+1; //January is 0!
@@ -242,47 +229,52 @@ function insertOrders(cart,totalPrice){
 
   today = yyyy+ '-' + mm + '-' + dd;
   console.log(today);
+  //queries
     db.query(sql,[today, totalPrice, cart.totalQty], (err, result)=>{
-        if (err){
-          throw err;
-        }else{
-          let message="succesfully updated OrderSummary";
-          console.log(message);
-          console.log(result.insertId);
-        }
-      })
-
-db.query(sql2, (err, result)=>{
-  if (err){
-    throw err;
-  }else{
-    console.log('maxID');
-    console.log(result[0]);
-    let maxID= result[0];
-    order(cart, maxID);
-  }
-})
-
-};
-
-function order(cart,maxID){
-  let sql3 ='INSERT into orders(orderId, itemId, name, price, qty) VALUES(?, ?, ?, ?, ?)'
- let stuff= cart.generateArray();
-  for(var i=0; i<stuff.length; i++){
-    db.query(sql3,[maxID,stuff[i].item.id, stuff[i].item.name,
-      stuff[i].price, stuff[i].qty], err=>{
         if (err){
           throw err;
         }else{
           let message="succesfully updated orders";
           console.log(message);
-          return message;
+          console.log(result.insertId);
+          lastID=result.insertId
+          order(cart, lastID);
         }
       })
 
+};
 
+function order(cart,lastID){
+  let sql2 ='INSERT into order_details(orderId, itemId, name, price, qty) VALUES(?, ?, ?, ?, ?)'
+ let stuff= cart.generateArray();
+  for(var i=0; i<stuff.length; i++){
+    db.query(sql2,[lastID,stuff[i].item.id, stuff[i].item.name,
+      stuff[i].price, stuff[i].qty], err=>{
+        if (err){
+          throw err;
+        }else{
+          let message="succesfully updated order_details";
+          console.log(message);
+          return message;
+        }
+      })
   }
-}
+  //create an array for ids and amnt
+  let idArr =cart.idArray();
+  let amtArr=cart.amntArray();
+
+  //update amnt in database for purchased items
+   let sql3=`UPDATE products SET ? WHERE id = ?`;
+   for(i= 0; i<idArr.length; i++){
+     let query= db.query(sql3,[{amnt: amtArr[i]},idArr[i]], err=>{
+       if (err){
+         throw err;
+       }else{
+         console.log("succesfully updated amnt")
+       }
+     })
+   }
+};
 
 
 module.exports = router;
