@@ -181,11 +181,20 @@ router.get('/checkout2',(req,res)=>{
     totalPrice=cart.totalPrice();
     let amount = totalPrice *100;
     // console.log(name,  address, city, country, zip, email);
-    const customer= [name,  address, city, country, zip, email]
+    const{name,  address, city, country, zip, email} =req.body;
+    let customers = [name,  address, city, country, zip, email]
+    let sql = "INSERT INTO customers (name,  address, city, country, zip, email) VALUES (?, ?, ?,?,?,?);"
+ db.query(sql, customers, (err, result)=>{
+   if (err){
+     throw err;
+   }else{
+     console.log('succesfully insetred customers');
+     console.log(result.insertId);
+     let custID = result.insertId;
+     insertOrders(cart,totalPrice, custID);
+   }
+ });
 
-
-
-  insertOrders(cart,totalPrice);
 
   //process payment
   //copied from stripe api
@@ -210,9 +219,9 @@ router.get('/success',(req, res)=>res.render('success'));
 
 
 
-function insertOrders(cart,totalPrice){
+function insertOrders(cart,totalPrice, custID){
   //sql commands
-  let sql ="INSERT INTO orders(dateCreated, totalPrice, totalQty) VALUES(?, ?, ?)"
+  let sql ="INSERT INTO orders(dateCreated, totalPrice, totalQty, custID) VALUES(?, ?, ?, ?)"
   //get date
   var today= new Date();
   var dd = today.getDate();
@@ -230,7 +239,7 @@ function insertOrders(cart,totalPrice){
   today = yyyy+ '-' + mm + '-' + dd;
   console.log(today);
   //queries
-    db.query(sql,[today, totalPrice, cart.totalQty], (err, result)=>{
+    db.query(sql,[today, totalPrice, cart.totalQty, custID], (err, result)=>{
         if (err){
           throw err;
         }else{
