@@ -11,7 +11,6 @@ const stripe = require('stripe')(process.env.SECRET_KEY);
 const db = require('../models/User');
 
 router.get('/',(req, res)=>res.render('welcome',));
-router.get('/about',(req, res)=> res.render('about'));
 
 
 router.get('/dashboard',ensureAuthenticated,(req, res)=>
@@ -20,8 +19,6 @@ name: req.user.user
 }));
 
 //products routes
-//Catering
-router.get('/catering',(req, res)=> res.render('catering'));
 
 // Bake shop,display products
 
