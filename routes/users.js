@@ -2,14 +2,18 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const csrf = require('csurf');
+
+const csrfProtection = csrf();
+router.use(csrfProtection);
 
 //User model
 const db = require('../models/User');
 //Login
-router.get('/login',(req, res)=> res.render('login'));
+router.get('/login',(req, res)=> res.render('login',{csrfToken:req.csrfToken()}));
 
 //Register Page
-router.get('/register',(req, res)=> res.render('register'));
+router.get('/register',(req, res)=> res.render('register',{csrfToken:req.csrfToken()}));
 
 // Register Handle
 router.post('/register', (req, res) => {

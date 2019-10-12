@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const {ensureAuthenticated} = require('../config/auth');
 const Cart = require("../models/cart");
-const keyPublishable = process.env.PUBLISHABLE_KEY;
+const keyPublishable = '';
 const keySecret = process.env.SECRET_KEY;
 const stripe = require('stripe')(process.env.SECRET_KEY);
 
@@ -129,7 +129,8 @@ router.get('/checkout',(req,res)=>{
     //fetch total price
     totalPrice=cart.totalPrice();
     const errMsg = req.flash('error')[0];
-    return res.render('checkout',{total: totalPrice, errMsg: errMsg, noErrors: !errMsg});
+    return res.render('checkout',{total: totalPrice, errMsg: errMsg,
+      noErrors: !errMsg,});
   });
 
 router.post('/checkout',( req, res)=>{
