@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-6 m-auto">
+      <div class="card card-body text-center">
+        <h1>Update Account Info</h1>
+        <%if (login){%>
+          <form class="update-form" action="/users/update" method="post">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <div id="card-element">
+                <input type="text" id='name'name ="name"  class='form-control' value='<%=user.user%>'>
+              </div>
+           </div>
+           <div class="form-group ">
+             <label for="address">Address</label>
+             <div id="card-element">
+             <input type="text" id='address'name ="address"  class='form-control' value='<%=user.address%>'>
+           </div>
+          </div>
+          <div class="form-group">
+            <label for="city">City or Town</label>
+            <div id="city">
+            <input type="text" id='city' name ="city"  class='form-control' value='<%=user.city%>'>
+          </div>
+         </div>
+         <div class="form-group">
+           <label for="country">Country</label>
+           <div id="card-element">
+           <input type="text" id='country' name="country"  class='form-control'value='<%=user.country%> '>
+         </div>
+        </div>
+        <div class="form-group">
+          <label for="zip">Zip Code</label>
+          <div id="card-element">
+          <input type="text" id='zip' name="zip"  class='form-control'value='<%=user.zip%>' >
+        </div>
+       </div>
+       <div class="form-group">
+         <label for="email">Email Address</label>
+         <div id="card-element">
+         <input type="text" id='email' name="email"  class='form-control' value='<%=user.email%>'>
+       </div>
+      </div>
+      <input type="hidden" name="id" value="<%= user.id %>">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <button type="submit" name="button">Confirm Changes</button>
+
+          </form>
+          <%}else{%>
+            <h1>Login casual</h1>
+        <%  }%>
+      </div>
+    </div>
+  </div>
+</div>

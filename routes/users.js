@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const csrf = require('csurf');
+const multer = require('multer');
 
 const csrfProtection = csrf();
 router.use(csrfProtection);
@@ -14,6 +15,11 @@ router.get('/login',(req, res)=> res.render('login',{csrfToken:req.csrfToken()})
 
 //Register Page
 router.get('/register',(req, res)=> res.render('register',{csrfToken:req.csrfToken()}));
+
+router.get('/update',(req, res)=> res.render('update',{csrfToken:req.csrfToken()}));
+
+//update Handle
+router.get('/login',(req, res)=> res.render('login',{csrfToken:req.csrfToken()}));
 
 // Register Handle
 router.post('/register', (req, res) => {
@@ -105,5 +111,22 @@ router.get('/logout', (req,res)=>{
   req.flash('success_msg', 'logged out');
   res.redirect('/users/login');
 });
+
+//Update post
+router.post('/update', (req, res)=>{
+  console.log(req.body)
+ let id = Number(req.body.id)
+  let sql =`UPDATE users SET user = ?, address= ?, country= ?, zip=?, email= ? WHERE id=?`;
+  db.query(sql,[req.body.name,req.body.address,req.body.country,req.body.zip,
+    req.body.email,id], (err, result)=>{
+      if(err){
+        throw err;
+      }
+      else{
+        res.redirect('/dashboard')
+      }
+    })
+  });
+
 
 module.exports = router;
