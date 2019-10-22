@@ -11,8 +11,9 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-6 col-md-6" id="products">
+      <% include ./partials/messages %>
+
       <div class="card card-body text-center">
-        <% include ./partials/messages %>
 
         <%if (login){%>
           <form class="payment-form" action="/checkout" method="post">

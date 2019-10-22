@@ -144,8 +144,21 @@ router.post('/checkout',( req, res)=>{
 
   //Check required fields
   if(!name || !address || !city || !country|| !zip|| !email){
-    console.log('error!')
+    errors.push({ msg : "Please fill in all fields"});
+    // console.log('error!');
     // errors.push({ msg : "Please fill in all fields"});
+  }
+
+  if(errors.length >0){
+    res.render('checkout',{
+      errors,
+      name,
+      address,
+      city,
+      country,
+      zip,
+      email
+    });
   }else{
 
     const cart = new Cart(req.session.cart);
