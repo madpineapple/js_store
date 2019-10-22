@@ -6,7 +6,7 @@ const Cart = require("../models/cart");
 const keyPublishable = '';
 const keySecret = '';
 const stripe = require('stripe')('');
-const nodemailer = require('nodemailer');
+const Sale = require("../models/sale");
 
 //User model
 const db = require('../models/User');
@@ -190,52 +190,10 @@ router.get('/checkout2',(req,res)=>{
      console.log('succesfully insetred customers');
      console.log(result.insertId);
      let custID = result.insertId;
-     insertOrders(cart,totalPrice, custID);
-     const output =`
-       <h3>Your order is on route!</h3>
-       <p>Your delivery address</p>
-       <p>${customers}</p>
-       <p>Total</p>
-       <p>${totalPrice}</p>
-     `;
-     async function main() {
-         // Generate test SMTP service account from ethereal.email
-         // Only needed if you don't have a real mail account for testing
-         let testAccount = await nodemailer.createTestAccount();
+     const sale = Sale;
+     sale.insertOrders(cart,totalPrice, custID);
 
-         // create reusable transporter object using the default SMTP transport
-         let transporter = nodemailer.createTransport({
-             host: 'smtp.ethereal.email',
-             port: 587,
-             secure: false, // true for 465, false for other ports
-             auth: {
-                 user: testAccount.user, // generated ethereal user
-                 pass: testAccount.pass // generated ethereal password
-             }
-         });
-
-         // send mail with defined transport object
-         let info = await transporter.sendMail({
-             from: '"Fred Foo 👻" <foo@example.com>', // sender address
-             to: 'bar@example.com, baz@example.com', // list of receivers
-             subject: 'Hello ✔', // Subject line
-             text: 'Hello world?', // plain text body
-             html: output  // html body
-
-         });
-
-         console.log('Message sent: %s', info.messageId);
-         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-         // Preview only available when sending through an Ethereal account
-         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-         // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-     }
-
-     main().catch(console.error);
-   }
- });
-
+ }})
 
   //process payment
   //copied from stripe api
@@ -258,73 +216,6 @@ router.get('/checkout2',(req,res)=>{
 
 router.get('/success',(req, res)=>res.render('success'));
 
-
-
-function insertOrders(cart,totalPrice, custID){
-  //sql commands
-  let sql ="INSERT INTO orders(dateCreated, totalPrice, totalQty, custID) VALUES(?, ?, ?, ?)"
-  //get date
-  var today= new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth()+1; //January is 0!
-  var yyyy = today.getFullYear();
-
-  if(dd<10) {
-      dd = '0'+dd
-  }
-
-  if(mm<10) {
-      mm = '0'+mm
-  }
-
-  today = yyyy+ '-' + mm + '-' + dd;
-  console.log(today);
-  //queries
-    db.query(sql,[today, totalPrice, cart.totalQty, custID], (err, result)=>{
-        if (err){
-          throw err;
-        }else{
-          let message="succesfully updated orders";
-          console.log(message);
-          console.log(result.insertId);
-          lastID=result.insertId
-          order(cart, lastID);
-        }
-      })
-
-};
-
-function order(cart,lastID){
-  let sql2 ='INSERT into order_details(orderId, itemId, name, price, qty) VALUES(?, ?, ?, ?, ?)'
- let stuff= cart.generateArray();
-  for(var i=0; i<stuff.length; i++){
-    db.query(sql2,[lastID,stuff[i].item.id, stuff[i].item.name,
-      stuff[i].price, stuff[i].qty], err=>{
-        if (err){
-          throw err;
-        }else{
-          let message="succesfully updated order_details";
-          console.log(message);
-          return message;
-        }
-      })
-  }
-  //create an array for ids and amnt
-  let idArr =cart.idArray();
-  let amtArr=cart.amntArray();
-
-  //update amnt in database for purchased items
-   let sql3=`UPDATE products SET ? WHERE id = ?`;
-   for(i= 0; i<idArr.length; i++){
-     let query= db.query(sql3,[{amnt: amtArr[i]},idArr[i]], err=>{
-       if (err){
-         throw err;
-       }else{
-         console.log("succesfully updated amnt")
-       }
-     })
-   }
-};
 
 
 module.exports = router;

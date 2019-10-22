@@ -116,8 +116,8 @@ router.get('/logout', (req,res)=>{
 router.post('/update', (req, res)=>{
   console.log(req.body)
  let id = Number(req.body.id)
-  let sql =`UPDATE users SET user = ?, address= ?, country= ?, zip=?, email= ? WHERE id=?`;
-  db.query(sql,[req.body.name,req.body.address,req.body.country,req.body.zip,
+  let sql =`UPDATE users SET user = ?, address= ?,city=?, country= ?, zip=?, email= ? WHERE id=?`;
+  db.query(sql,[req.body.name,req.body.address,req.body.city,req.body.country,req.body.zip,
     req.body.email,id], (err, result)=>{
       if(err){
         throw err;
